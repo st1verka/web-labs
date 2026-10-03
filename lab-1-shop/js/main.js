@@ -1,98 +1,74 @@
-document.addEventListener('DOMContentLoaded', () => {
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
 
-    const catalogContainer = document.getElementById('catalog');
+function updateCartButton() {
+    const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.getElementById('cart-btn').innerText = `Корзина (${total})`;
+}
 
-    function renderCatalog() {
-        if (!catalogContainer) return;
-
-        catalogContainer.innerHTML = products.map(product => `
-            <article class="product-card">
-                <img src="assets/${product.image}" alt="${product.name}" style="width:100%; height:150px; object-fit:contain;">
-                <h3>${product.name}</h3>
-                <p>${product.price} руб.</p>
-                <button class="add-btn" onclick="addToCart(${product.id})">В корзину</button>
-            </article>
-        `).join('');
-    }
-
-    renderCatalog();
-
-    const savedCart = JSON.parse(localStorage.getItem('cart')) || [];
-    document.getElementById('cart-count').innerText = savedCart.length;
-});
-
-window.addToCart = function (id) {
-    const product = products.find(p => p.id === id);
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.push(product);
+function saveAndRender() {
     localStorage.setItem('cart', JSON.stringify(cart));
-    document.getElementById('cart-count').innerText = cart.length;
-    alert(product.name + " добавлен!");
+    renderCartItems();
+    updateCartButton();
+}
+
+window.addToCart = (id) => {
+    const p = products.find(i => i.id === id);
+    const existing = cart.find(i => i.id === id);
+    if (existing) existing.quantity++;
+    else cart.push({ ...p, quantity: 1 });
+    saveAndRender();
+    showNotification(`${p.name} добавлен`);
 };
 
-const modal = document.getElementById('cart-modal');
-const cartItemsContainer = document.getElementById('cart-items');
-const totalPriceElement = document.getElementById('total-price');
+window.changeQty = (index, delta) => {
+    cart[index].quantity += delta;
+    if (cart[index].quantity <= 0) cart.splice(index, 1);
+    saveAndRender();
+};
 
-document.getElementById('cart-btn').addEventListener('click', () => {
-    modal.style.display = 'block';
-    renderCartItems();
-});
-
-function closeModal() {
-    modal.style.display = 'none';
-    document.getElementById('order-form').style.display = 'none';
-    document.getElementById('cart-content').style.display = 'block';
+function renderCatalog() {
+    document.getElementById('catalog').innerHTML = products.map(p => `
+        <article class="product-card">
+            <img src="assets/${p.image}" alt="${p.name}">
+            <h3>${p.name}</h3>
+            <p>${p.price} руб.</p>
+            <button class="btn btn-primary" onclick="addToCart(${p.id})">В корзину</button>
+        </article>
+    `).join('');
 }
 
 function renderCartItems() {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-
-    if (cart.length === 0) {
-        cartItemsContainer.innerHTML = '<p>Корзина пуста</p>';
-        totalPriceElement.innerText = '0';
-        return;
-    }
-
-    cartItemsContainer.innerHTML = cart.map((item, index) => `
-        <div style="margin-bottom: 10px;">
-            ${item.name} - ${item.price} руб.
-            <button onclick="removeFromCart(${index})">Удалить</button>
+    const container = document.getElementById('cart-items');
+    container.innerHTML = cart.map((item, index) => `
+        <div class="cart-item">
+            <span>${item.name}</span>
+            <div class="quantity-controls">
+                <button class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                <span>${item.quantity}</span>
+                <button class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+            </div>
+            <span>${item.price * item.quantity} руб.</span>
         </div>
     `).join('');
-
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    totalPriceElement.innerText = total;
+    document.getElementById('total-price').innerText = cart.reduce((sum, i) => sum + (i.price * i.quantity), 0);
 }
 
-window.removeFromCart = function (index) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.splice(index, 1);
-    localStorage.setItem('cart', JSON.stringify(cart));
-
-    document.getElementById('cart-count').innerText = cart.length;
-    renderCartItems();
-};
-
-function showOrderForm() {
-    document.getElementById('cart-content').style.display = 'none';
-    document.getElementById('order-form').style.display = 'block';
+function showNotification(msg) {
+    const note = document.getElementById('notification');
+    note.innerText = msg; note.style.display = 'block';
+    setTimeout(() => note.style.display = 'none', 2000);
 }
 
+function openCart() { document.getElementById('cart-modal').style.display = 'block'; renderCartItems(); }
+function closeModal() { document.getElementById('cart-modal').style.display = 'none'; }
+function showOrderForm() { document.getElementById('cart-content').style.display = 'none'; document.getElementById('order-form').style.display = 'block'; }
+function backToCart() { document.getElementById('cart-content').style.display = 'block'; document.getElementById('order-form').style.display = 'none'; }
 function createOrder() {
-    const name = document.getElementById('name').value;
-    const phone = document.getElementById('phone').value;
-
-    if (name && phone) {
+    if (document.getElementById('name').value && document.getElementById('phone').value) {
         alert("Заказ создан!");
-
-        localStorage.removeItem('cart');
-        document.getElementById('cart-count').innerText = "0";
-
-        closeModal();
-        document.getElementById('order-form').style.display = 'none';
-        document.getElementById('cart-content').style.display = 'block';
-    } else {
-        alert("Пожалуйста, заполните все поля!");
-    }
+        localStorage.removeItem('cart'); cart = []; saveAndRender(); closeModal();
+    } else alert("Заполните поля!");
 }
+
+renderCatalog();
+updateCartButton();
