@@ -59,15 +59,36 @@ function showNotification(msg) {
     setTimeout(() => note.style.display = 'none', 2000);
 }
 
-function openCart() { document.getElementById('cart-modal').style.display = 'block'; renderCartItems(); }
+function openCart() {
+    const modal = document.getElementById('cart-modal');
+    modal.style.display = 'block';
+
+    document.getElementById('cart-content').style.display = 'block';
+    document.getElementById('order-form').style.display = 'none';
+
+    const inputs = document.querySelectorAll('#order-form input');
+    inputs.forEach(input => input.value = '');
+
+    renderCartItems();
+}
 function closeModal() { document.getElementById('cart-modal').style.display = 'none'; }
 function showOrderForm() { document.getElementById('cart-content').style.display = 'none'; document.getElementById('order-form').style.display = 'block'; }
 function backToCart() { document.getElementById('cart-content').style.display = 'block'; document.getElementById('order-form').style.display = 'none'; }
 function createOrder() {
-    if (document.getElementById('name').value && document.getElementById('phone').value) {
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+
+    if (name && phone) {
         alert("Заказ создан!");
-        localStorage.removeItem('cart'); cart = []; saveAndRender(); closeModal();
-    } else alert("Заполните поля!");
+        localStorage.removeItem('cart');
+        cart = [];
+        saveAndRender();
+        const inputs = document.querySelectorAll('#order-form input');
+        inputs.forEach(input => input.value = '');
+        closeModal();
+    } else {
+        alert("Заполните поля!");
+    }
 }
 
 renderCatalog();
