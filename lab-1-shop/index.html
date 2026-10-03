@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ФотоМаг - Техника для профи</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <header>
+        <h1>ФотоМаг</h1>
+        <button id="cart-btn">Корзина (<span id="cart-count">0</span>)</button>
+    </header>
+
+    <main>
+        <section id="catalog" class="catalog">
+        </section>
+    </main>
+
+    <div id="cart-modal"
+        style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5);">
+        <div style="background:white; margin:5% auto; padding:20px; width:400px;">
+            <div id="cart-content">
+                <h2>Корзина</h2>
+                <div id="cart-items"></div>
+                <p>Итого: <span id="total-price">0</span> руб.</p>
+                <button onclick="closeModal()">Закрыть</button>
+                <button onclick="showOrderForm()">Оформить заказ</button>
+            </div>
+
+            <!-- Форма заказа (скрыта по умолчанию) -->
+            <div id="order-form" style="display:none;">
+                <h2>Оформление заказа</h2>
+                <input type="text" id="name" placeholder="Имя" required><br>
+                <input type="text" id="surname" placeholder="Фамилия" required><br>
+                <input type="text" id="address" placeholder="Адрес доставки" required><br>
+                <input type="tel" id="phone" placeholder="Телефон" required><br>
+                <button onclick="createOrder()">Создать заказ</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/data.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
