@@ -7,10 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         catalogContainer.innerHTML = products.map(product => `
             <article class="product-card">
-                <img src="assets/${product.image}" alt="${product.name}" style="width:100%; height:150px; object-fit:contain;">
                 <h3>${product.name}</h3>
-                <p>${product.price} руб.</p>
-                <button class="add-btn" onclick="addToCart(${product.id})">В корзину</button>
+                <p>Цена: ${product.price} руб.</p>
+                <button onclick="addToCart(${product.id})">Добавить в корзину</button>
             </article>
         `).join('');
     }
