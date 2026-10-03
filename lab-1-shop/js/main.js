@@ -7,9 +7,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         catalogContainer.innerHTML = products.map(product => `
             <article class="product-card">
+                <img src="assets/${product.image}" alt="${product.name}" style="width:100%; height:150px; object-fit:contain;">
                 <h3>${product.name}</h3>
-                <p>Цена: ${product.price} руб.</p>
-                <button onclick="addToCart(${product.id})">Добавить в корзину</button>
+                <p>${product.price} руб.</p>
+                <button class="add-btn" onclick="addToCart(${product.id})">В корзину</button>
             </article>
         `).join('');
     }
@@ -66,7 +67,7 @@ function renderCartItems() {
 
 window.removeFromCart = function (index) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
-    cart.splice(index, 1); // Удаляем 1 элемент по индексу
+    cart.splice(index, 1);
     localStorage.setItem('cart', JSON.stringify(cart));
 
     document.getElementById('cart-count').innerText = cart.length;
