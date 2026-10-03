@@ -1,0 +1,29 @@
+.catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.product-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    text-align: center;
+}
+
+@media (max-width: 900px) {
+    .catalog {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+    .catalog {
+        grid-template-columns: 1fr;
+    }
+
+    #cart-modal>div {
+        width: 95% !important;
+        margin: 5% auto;
+    }
+}
