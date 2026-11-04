@@ -1,0 +1,45 @@
+* { box-sizing: border-box; }
+body { margin: 0; background: white; color: #222; font-family: Arial, sans-serif; font-size: 14px; }
+.app { max-width: 900px; margin: 24px auto; padding: 0 16px; }
+h1 { margin: 0 0 16px; font-size: 26px; }
+h2 { margin: 0; font-size: 18px; }
+.summary, .hint, .footer { color: #666; font-size: 13px; }
+.summary { margin-bottom: 20px; }
+.add-form, .toolbar, .edit-form { display: flex; flex-wrap: wrap; align-items: end; gap: 10px; }
+.field { display: flex; flex: 1; flex-direction: column; gap: 5px; min-width: 140px; }
+.add-form .field:first-child { flex: 2; }
+.label { font-size: 13px; }
+input, select, button { font: inherit; }
+input:not([type=checkbox]), select { width: 100%; min-height: 34px; padding: 6px; border: 1px solid #aaa; border-radius: 2px; background: white; color: #222; }
+.button { min-height: 34px; padding: 6px 10px; border: 1px solid #aaa; border-radius: 2px; background: #eee; color: #222; cursor: pointer; }
+.button:hover { background: #ddd; }
+button:disabled { opacity: .4; cursor: default; }
+input:focus-visible, select:focus-visible, button:focus-visible { outline: 2px solid #2464ab; outline-offset: 2px; }
+.toolbar { margin-top: 18px; padding-top: 16px; border-top: 1px solid #ccc; }
+.hint { line-height: 1.5; }
+.list-header { display: flex; align-items: center; gap: 8px; margin: 24px 0 10px; }
+.count { color: #666; }
+.task-list { list-style: none; margin: 0; padding: 0; }
+.task { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid #ccc; }
+.task-content { flex: 1; min-width: 100px; }
+.task-title { margin: 0 0 4px; overflow-wrap: anywhere; }
+.task-date { color: #666; font-size: 12px; }
+.checkbox { width: 17px; height: 17px; cursor: pointer; }
+.completed .task-title { text-decoration: line-through; color: #777; }
+.actions { display: flex; flex-wrap: wrap; gap: 5px; }
+.drag-handle { cursor: grab; user-select: none; color: #666; font-size: 20px; }
+.drag-handle[draggable=false] { opacity: .4; cursor: default; }
+.dragging { opacity: .4; }
+.drop-target { background: #eee; outline: 1px dashed #666; }
+.edit-form { width: 100%; }
+.empty { padding: 20px 0; color: #666; }
+.notice { color: #a22; }
+.notice:empty { display: none; }
+.footer { margin-top: 24px; }
+@media (max-width: 600px) {
+  .app { margin-top: 16px; }
+  .add-form, .toolbar { align-items: stretch; flex-direction: column; }
+  .task-content { flex-basis: calc(100% - 65px); }
+  .actions { margin-left: 37px; }
+  .edit-form { align-items: stretch; flex-direction: column; }
+}
